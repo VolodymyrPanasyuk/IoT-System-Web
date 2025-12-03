@@ -17,7 +17,10 @@ export function JwtPayloadToUserInfo(jwtPayload: JwtPayload | null): UserInfo | 
     userName: jwtPayload[CLAIM_TYPES.USERNAME],
     firstName: jwtPayload[CLAIM_TYPES.FIRST_NAME],
     lastName: jwtPayload[CLAIM_TYPES.LAST_NAME],
-    roles: jwtPayload[CLAIM_TYPES.ROLE_NAME]
+    roles: jwtPayload[CLAIM_TYPES.ROLE_NAME],
+    roleIds: jwtPayload[CLAIM_TYPES.ROLE_ID],
+    groupIds: jwtPayload[CLAIM_TYPES.GROUP_ID],
+    groupNames: jwtPayload[CLAIM_TYPES.GRPOUP_NAME]
   } as UserInfo;
 }
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { authApiClient } from '@/api/identity/auth'
 import type {
   AuthContextType,
@@ -10,27 +10,31 @@ import type {
 import { useNotification } from './NotificationContext'
 import { APP_ROUTES } from '@/utils/constants'
 import { decodeToken, JwtPayloadToUserInfo } from '@/utils/helpers'
+import { isAfter } from 'date-fns'
+import { useLoadingStore } from '@/store/loadingStore'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserInfo | null>(JwtPayloadToUserInfo(decodeToken(sessionStorage.getItem('accessToken'))))
-  const [isLoading, setIsLoading] = useState(true)
+
   const navigate = useNavigate()
   const { showError, showSuccess } = useNotification()
+  const location = useLocation();
+  const loadingStore = useLoadingStore();
 
-  // Перевірка та відновлення сесії при завантаженні
   useEffect(() => {
     const initAuth = async () => {
-      const token = sessionStorage.getItem('accessToken')
-      if (token) {
+      const token = decodeToken(sessionStorage.getItem('accessToken'))
+      if (token && isAfter(token.exp, new Date())
+        && !([APP_ROUTES.LOGIN, APP_ROUTES.REGISTER] as string[]).includes(location.pathname)
+      ) {
         try {
           await refreshToken()
         } catch (error) {
-          sessionStorage.removeItem('accessToken')
+          navigate(APP_ROUTES.LOGIN)
         }
       }
-      setIsLoading(false)
     }
 
     initAuth()
@@ -38,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = useCallback(async (credentials: LoginRequest) => {
     try {
-      setIsLoading(true)
+      loadingStore.startLoading(login.name);
       const response = await authApiClient.login(credentials)
 
       sessionStorage.setItem('accessToken', response.accessToken)
@@ -51,13 +55,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(message)
       throw error
     } finally {
-      setIsLoading(false)
+      loadingStore.stopLoading(login.name);
     }
   }, [navigate, showError, showSuccess])
 
   const register = useCallback(async (data: RegisterRequest) => {
     try {
-      setIsLoading(true)
+      loadingStore.startLoading(register.name);
       const response = await authApiClient.register(data)
 
       sessionStorage.setItem('accessToken', response.accessToken)
@@ -70,24 +74,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       showError(message)
       throw error
     } finally {
-      setIsLoading(false)
+      loadingStore.stopLoading(register.name);
     }
   }, [navigate, showError, showSuccess])
 
-  const refreshToken = useCallback(async (): Promise<boolean> => {
+  const refreshToken = async () => {
     try {
+      if (loadingStore.isLoading(refreshToken.name)) return false;
+      loadingStore.startLoading(refreshToken.name);
+
       const response = await authApiClient.refreshToken()
 
       sessionStorage.setItem('accessToken', response.accessToken)
       setUser(JwtPayloadToUserInfo(decodeToken(response.accessToken)));
 
       return true
-    } catch (error) {
+    }
+    catch (error) {
       sessionStorage.removeItem('accessToken')
       setUser(null)
       return false
     }
-  }, [])
+    finally {
+      loadingStore.stopLoading(refreshToken.name);
+    }
+  };
 
   const logout = useCallback(async () => {
     try {
@@ -105,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
-    isLoading,
+    isLoading: loadingStore.isLoading(login.name) || loadingStore.isLoading(register.name),
     login,
     register,
     logout,

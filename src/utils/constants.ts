@@ -79,4 +79,5 @@ export const CLAIM_TYPES = {
     ROLE_NAME: 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
     GROUP_ID: 'group_id',
     GRPOUP_NAME: 'group_name',
+    EXPIRES_AT: 'exp'
 } as const

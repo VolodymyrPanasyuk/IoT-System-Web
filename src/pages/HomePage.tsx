@@ -19,11 +19,6 @@ export const HomePage: React.FC = () => {
           <Typography variant="body2" color="text.secondary">
             Ви увійшли як <strong>@{user.userName}</strong>
           </Typography>
-          {user.roles && user.roles.length > 0 && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Ролі: {user.roles.join(', ')}
-            </Typography>
-          )}
         </Paper>
       )}
 

@@ -18,7 +18,6 @@ export const DevicesListPage: React.FC = () => {
   const { items: devices, isLoading, fetchAll, remove } = useCrud(devicesApiClient, {
     entityName: 'Пристрій',
   })
-
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [deviceToDelete, setDeviceToDelete] = useState<Device | null>(null)
 
@@ -31,7 +30,7 @@ export const DevicesListPage: React.FC = () => {
   }
 
   const handleCreate = () => {
-    navigate(APP_ROUTES.DEVICE_MANAGE)
+    navigate(APP_ROUTES.DEVICES_MANAGE)
   }
 
   const handleEdit = (device: Device) => {

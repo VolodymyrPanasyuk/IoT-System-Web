@@ -17,7 +17,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [notification, setNotification] = useState<Notification | null>(null)
 
   const showNotification = useCallback(
-    (message: string, type: NotificationType = 'info', duration = NOTIFICATION_DURATION.MEDIUM) => {
+    (message: string, type: NotificationType = 'info', duration = NOTIFICATION_DURATION.MEDIUM as number) => {
       setNotification({
         id: Date.now().toString(),
         message,
@@ -29,11 +29,11 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   )
 
   const showSuccess = useCallback((message: string) => {
-    showNotification(message, 'success', NOTIFICATION_DURATION.SHORT)
+    showNotification(message, 'success', NOTIFICATION_DURATION.MEDIUM)
   }, [showNotification])
 
   const showError = useCallback((message: string) => {
-    showNotification(message, 'error', NOTIFICATION_DURATION.LONG)
+    showNotification(message, 'error', NOTIFICATION_DURATION.MEDIUM)
   }, [showNotification])
 
   const showWarning = useCallback((message: string) => {

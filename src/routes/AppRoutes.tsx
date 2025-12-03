@@ -16,44 +16,20 @@ import { APP_ROUTES } from '@/utils/constants'
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Public routes без layout */}
       <Route path={APP_ROUTES.LOGIN} element={<LoginPage />} />
       <Route path={APP_ROUTES.REGISTER} element={<RegisterPage />} />
 
-      {/* Routes з layout */}
-      <Route element={<AppLayout><Routes><Route path="*" element={null} /></Routes></AppLayout>}>
-        {/* Public routes */}
+      <Route element={<AppLayout />}>
         <Route path={APP_ROUTES.HOME} element={<HomePage />} />
         <Route path={APP_ROUTES.DEVICES} element={<DevicesListPage />} />
-        <Route path="/devices/:id" element={<DeviceDetailPage />} />
+        <Route path={APP_ROUTES.DEVICE_DETAIL} element={<DeviceDetailPage />} />
 
-        {/* Protected routes - Admin */}
-        <Route
-          path={APP_ROUTES.ADMIN.USERS}
-          element={
-            <ProtectedRoute>
-              <UsersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={APP_ROUTES.ADMIN.ROLES}
-          element={
-            <ProtectedRoute>
-              <RolesPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={APP_ROUTES.ADMIN.GROUPS}
-          element={
-            <ProtectedRoute>
-              <GroupsPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route element={<ProtectedRoute />}>
+          <Route path={APP_ROUTES.ADMIN.USERS} element={<UsersPage />} />
+          <Route path={APP_ROUTES.ADMIN.ROLES} element={<RolesPage />} />
+          <Route path={APP_ROUTES.ADMIN.GROUPS} element={<GroupsPage />} />
+        </Route>
 
-        {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

@@ -29,8 +29,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useUIStore } from '@/store/uiStore'
 import { APP_ROUTES } from '@/utils/constants'
 
-const drawerWidth = 240
-
 interface NavItem {
   label: string
   path?: string
@@ -70,11 +68,6 @@ const navigationItems: NavItem[] = [
         path: APP_ROUTES.ADMIN.GROUPS,
         icon: <GroupWorkIcon />,
       },
-      // {
-      //   label: 'Доступ до пристроїв',
-      //   path: APP_ROUTES.ADMIN.DEVICE_PERMISSIONS,
-      //   icon: <VpnKeyIcon />,
-      // },
     ],
   },
 ]
@@ -92,7 +85,11 @@ const authItems: NavItem[] = [
   },
 ]
 
-export const Navigation: React.FC = () => {
+interface NavigationProps {
+  drawerWidth: number
+}
+
+export const Navigation: React.FC<NavigationProps> = ({ drawerWidth }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()

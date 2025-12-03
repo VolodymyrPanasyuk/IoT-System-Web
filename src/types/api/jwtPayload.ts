@@ -9,4 +9,5 @@ export interface JwtPayload {
     [CLAIM_TYPES.ROLE_NAME]?: string[];
     [CLAIM_TYPES.GROUP_ID]?: string[];
     [CLAIM_TYPES.GRPOUP_NAME]?: string[];
+    [CLAIM_TYPES.EXPIRES_AT]: number;
 }

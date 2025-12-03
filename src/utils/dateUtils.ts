@@ -27,11 +27,6 @@ export const formatRelativeTime = (date: string | Date): string => {
   }
 }
 
-export const isDateExpired = (date: string | Date): boolean => {
-  try {
-    const dateObj = typeof date === 'string' ? parseISO(date) : date
-    return dateObj < new Date()
-  } catch (error) {
-    return false
-  }
+export const unixTimeStampToDate = (timeStamp: number): Date => {
+  return new Date(timeStamp * 1000);
 }

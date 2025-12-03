@@ -62,15 +62,13 @@ export const Header: React.FC = () => {
 
         {isAuthenticated && user && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {user.firstName} {user.lastName}
-            </Typography>
             <Button
               color="inherit"
               startIcon={<AccountCircle />}
               onClick={handleMenuOpen}
+              sx={{ textTransform: 'none' }}
             >
-              Профіль
+              {user.firstName} {user.lastName}
             </Button>
             <Menu
               anchorEl={anchorEl}
@@ -85,11 +83,6 @@ export const Header: React.FC = () => {
                 horizontal: 'right',
               }}
             >
-              <MenuItem disabled>
-                <Typography variant="body2" color="text.secondary">
-                  @{user.userName}
-                </Typography>
-              </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
                 Вийти

@@ -22,6 +22,9 @@ export interface UserInfo extends BaseEntity {
     firstName: string
     lastName: string
     roles: string[]
+    roleIds: string[]
+    groupIds: string[]
+    groupNames: string[]
 }
 
 export interface AuthContextType {
